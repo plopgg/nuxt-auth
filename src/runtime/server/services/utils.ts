@@ -21,7 +21,13 @@ export const getServerOrigin = (event?: H3Event): string => {
     return runtimeConfigOrigin
   }
 
-  // Prio 3: Try to infer the origin if we're not in production
+  // Prio 3: Passed from the event context
+  const eventAuthOrigin = event?.context?.AUTH_ORIGIN;
+  if (eventAuthOrigin) {
+    return eventAuthOrigin;
+  }
+
+  // Prio 4: Try to infer the origin if we're not in production
   if (event && !isProduction) {
     return getURL(event.node.req, false)
   }

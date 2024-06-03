@@ -16,6 +16,7 @@
   ],
   "scripts": {
     "prepack": "nuxt-module-build build",
+    "prepare": "nuxt-module-build build",
     "build": "nuxi build",
     "lint": "eslint . --max-warnings=0",
     "clean": "rm -rf playground-authjs/.nuxt playground-local/.nuxt playground-refresh/.nuxt dist .nuxt",

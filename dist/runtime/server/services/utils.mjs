@@ -4,6 +4,10 @@ import { isProduction } from "../../helpers.mjs";
 import { ERROR_MESSAGES } from "./errors.mjs";
 import { useRuntimeConfig } from "#imports";
 export const getServerOrigin = (event) => {
+  const eventAuthOrigin = event?.context?.AUTH_ORIGIN;
+  if (eventAuthOrigin) {
+    return eventAuthOrigin;
+  }
   const envOrigin = process.env.AUTH_ORIGIN;
   if (envOrigin) {
     return envOrigin;
@@ -11,10 +15,6 @@ export const getServerOrigin = (event) => {
   const runtimeConfigOrigin = useRuntimeConfig().public.auth.computed.origin;
   if (runtimeConfigOrigin) {
     return runtimeConfigOrigin;
-  }
-  const eventAuthOrigin = event?.context?.AUTH_ORIGIN;
-  if (eventAuthOrigin) {
-    return eventAuthOrigin;
   }
   if (event && !isProduction) {
     return getURL(event.node.req, false);

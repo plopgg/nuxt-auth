@@ -9,22 +9,22 @@ import { useRuntimeConfig } from '#imports'
  * Get `origin` and fallback to `x-forwarded-host` or `host` headers if not in production.
  */
 export const getServerOrigin = (event?: H3Event): string => {
-  // Prio 1: Environment variable
+  // Prio 1: Passed from the event context
+  const eventAuthOrigin = event?.context?.AUTH_ORIGIN
+  if (eventAuthOrigin) {
+    return eventAuthOrigin
+  }
+
+  // Prio 2: Environment variable
   const envOrigin = process.env.AUTH_ORIGIN
   if (envOrigin) {
     return envOrigin
   }
 
-  // Prio 2: Runtime configuration
+  // Prio 3: Runtime configuration
   const runtimeConfigOrigin = useRuntimeConfig().public.auth.computed.origin
   if (runtimeConfigOrigin) {
     return runtimeConfigOrigin
-  }
-
-  // Prio 3: Passed from the event context
-  const eventAuthOrigin = event?.context?.AUTH_ORIGIN;
-  if (eventAuthOrigin) {
-    return eventAuthOrigin;
   }
 
   // Prio 4: Try to infer the origin if we're not in production
